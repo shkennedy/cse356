@@ -1,0 +1,14 @@
+---
+# Deploys hw0 on cloud
+
+- hosts: hw1
+
+  tasks:
+    - name: initialize git repository in root dir
+    git: init
+    - name: add remote origin
+    git: remote add origin https://github.com/shkennedy/cse356
+    - name: pull files from hw0 repository
+    git: fetch origin
+    - name: merge local and remote branches
+    git: merge origin/master
