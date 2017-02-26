@@ -1,0 +1,42 @@
+---
+- hosts: cloud
+
+  become: yes
+
+  tasks:
+		- name: Update
+		  apt: update
+
+		- name: Install components
+		  apt: pkg={{ item }} state=present update_cache=true
+ 		  with_items:
+				- mongodb-org
+				- python3
+				- git
+		
+		- name: Start MongoDB
+		  service: 
+		    name: mongodb
+			state: start
+
+		- name: Restart MongoDB
+		  service:
+		    name: mongodb
+			state: restart		
+
+		- name: Create new database 'hw2'
+		  command: mongo
+		  command: use hw2
+		  
+		- name: Create new collection 'factbook'
+		  command: db.createCollection("factbook")
+		  command: exit
+
+		- name: Pull data from github
+		  git: 
+			repo: https://www.github.com/opendatajson/factbook.json
+			dest: ~/
+			depth: 1		
+
+		- name: Run fillfactbook.py to fill collection
+		  command: python fillfactbook.py
